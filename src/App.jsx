@@ -32,10 +32,21 @@ export default function App() {
   const {
     coords,
     loading: geoLoading,
-    error: geoError,
+    error: geoErrorInitial,
     permissionDenied,
     retry: geoRetry,
   } = useGeolocation();
+
+  const [geoError, setGeoError] = useState(null);
+
+  useEffect(() => {
+    if (geoErrorInitial) setGeoError(geoErrorInitial);
+    
+    // Security Check: Geolocation requires HTTPS in production
+    if (window.location.protocol === 'http:' && window.location.hostname !== 'localhost') {
+      setGeoError('Insecure Connection: Geolocation requires HTTPS to work on a live website.');
+    }
+  }, [geoErrorInitial]);
 
   // ── Hotspot data from Overpass API ─────────────────────────────
   const {
@@ -89,12 +100,16 @@ export default function App() {
   // ── Initial loading state (waiting for geolocation) ────────────
   const isInitialLoad = geoLoading && !coords;
 
-  if (isInitialLoad) {
-    return <LoadingOverlay message="Detecting your location…" />;
-  }
-
   return (
     <div className="app">
+      {/* ── Welcome Screen (Highest Priority) ── */}
+      {showWelcome && <WelcomeScreen onComplete={() => setShowWelcome(false)} />}
+
+      {/* ── App Content (Hidden until welcome is complete or shown as overlay) ── */}
+      {!showWelcome && isInitialLoad && (
+        <LoadingOverlay message="Detecting your location…" />
+      )}
+
       {/* ── Sidebar ── */}
       <Sidebar
         hotspots={hotspots}
@@ -154,9 +169,6 @@ export default function App() {
       >
         📡 {filteredHotspots.length} Hotspot{filteredHotspots.length !== 1 ? 's' : ''} Nearby
       </button>
-
-      {/* ── Welcome Screen ── */}
-      {showWelcome && <WelcomeScreen onComplete={() => setShowWelcome(false)} />}
     </div>
   );
 }

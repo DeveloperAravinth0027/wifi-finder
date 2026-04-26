@@ -2,7 +2,6 @@
  * Overpass API utilities for fetching Wi-Fi hotspot data from OpenStreetMap
  */
 
-const OVERPASS_API = 'https://overpass-api.de/api/interpreter';
 
 /**
  * Build an Overpass QL query to find Wi-Fi hotspots within a radius
@@ -147,25 +146,47 @@ export function parseResponse(data, userLat, userLon) {
   return hotspots;
 }
 
+const OVERPASS_MIRRORS = [
+  'https://overpass-api.de/api/interpreter',
+  'https://overpass.kumi.systems/api/interpreter',
+  'https://overpass.openstreetmap.ru/api/interpreter',
+];
+
 /**
- * Fetch hotspot data from Overpass API
- * @param {number} lat
- * @param {number} lon
- * @param {number} radiusMeters
- * @returns {Promise<Array>} Array of normalized hotspot objects
+ * Fetch hotspot data from Overpass API (with fallback support)
  */
 export async function fetchHotspots(lat, lon, radiusMeters) {
   const query = buildQuery(lat, lon, radiusMeters);
-  const response = await fetch(OVERPASS_API, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `data=${encodeURIComponent(query)}`,
-  });
+  const body = `data=${encodeURIComponent(query)}`;
+  
+  let lastError = null;
 
-  if (!response.ok) {
-    throw new Error(`Overpass API error: ${response.status} ${response.statusText}`);
+  for (const url of OVERPASS_MIRRORS) {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body,
+      });
+
+      if (!response.ok) {
+        lastError = new Error(`Overpass API mirror (${url}) returned ${response.status}`);
+        continue;
+      }
+
+      const data = await response.json();
+      return parseResponse(data, lat, lon);
+    } catch (err) {
+      lastError = err;
+      // Continue to next mirror on network failure
+    }
   }
 
-  const data = await response.json();
-  return parseResponse(data, lat, lon);
+  // If we reach here, all mirrors failed
+  if (lastError?.message === 'Failed to fetch') {
+    throw new Error(
+      'Network Error: The request was blocked. Please check your internet connection or disable any Ad-Blockers that might be blocking the mapping API.'
+    );
+  }
+  throw lastError || new Error('All Overpass API mirrors are currently unavailable. Please try again later.');
 }
