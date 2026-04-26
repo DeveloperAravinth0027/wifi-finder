@@ -1,0 +1,118 @@
+/* ─── Google Fonts ─────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ─── CSS Custom Properties (Design Tokens) ────────────────────── */
+:root {
+  /* Colors */
+  --bg-primary:      #0d111e;
+  --bg-secondary:    #111827;
+  --bg-card:         #1a2236;
+  --bg-card-active:  #1e2d4a;
+  --bg-hover:        #1e2a40;
+
+  --text-primary:    #f0f4ff;
+  --text-secondary:  #a8b8d8;
+  --text-muted:      #5c7099;
+
+  --accent:          #63b3ed;
+  --accent-hover:    #90cdf4;
+  --accent-dim:      rgba(99, 179, 237, 0.15);
+
+  --border:          #1e2d48;
+  --border-hover:    #2d4270;
+
+  --success:         #68d391;
+  --warning:         #f6ad55;
+  --danger:          #fc8181;
+
+  /* Gradients */
+  --gradient-accent: linear-gradient(135deg, #63b3ed 0%, #b794f4 50%, #f687b3 100%);
+  --gradient-bg:     linear-gradient(180deg, #0d111e 0%, #111827 100%);
+
+  /* Layout */
+  --sidebar-width:   360px;
+
+  /* Spacing (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Radius */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+}
+
+/* ─── Reset & Base ──────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  height: 100dvh;
+  overflow: hidden;
+}
+
+/* Safe-area insets for notched phones */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─── Scrollbars ────────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+*::-webkit-scrollbar { width: 6px; height: 6px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+/* ─── Focus Styles ──────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* ─── Links ─────────────────────────────────────────────────────── */
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* ─── Utility: visually-hidden ──────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
