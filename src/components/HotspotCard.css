@@ -1,0 +1,171 @@
+.hotspot-card {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  display: flex;
+  animation: cardSlideIn 0.35s ease both;
+  outline: none;
+  /* Minimum touch target */
+  min-height: 72px;
+}
+
+@keyframes cardSlideIn {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+.hotspot-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-color: var(--card-accent, var(--accent));
+}
+
+.hotspot-card:focus-visible {
+  box-shadow: 0 0 0 3px rgba(99, 179, 237, 0.35);
+  border-color: var(--accent);
+}
+
+.hotspot-card--active {
+  border-color: var(--card-accent, var(--accent));
+  background: var(--bg-card-active);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+/* Left colored accent bar */
+.card-accent-bar {
+  width: 4px;
+  flex-shrink: 0;
+  background: var(--card-accent, var(--accent));
+  border-radius: 4px 0 0 4px;
+  transition: background 0.2s;
+}
+
+.card-body {
+  padding: 12px 14px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+/* Header: name + distance */
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.card-name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.3;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.card-distance {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  background: var(--bg-hover);
+  padding: 2px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Meta row: category + wifi tag */
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.card-badge {
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.card-wifi-tag {
+  font-size: 0.7rem;
+  color: #68d391;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.wifi-dot-small {
+  font-size: 0.45rem;
+  animation: pulse-wifi 2s ease-in-out infinite;
+}
+
+@keyframes pulse-wifi {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.35; }
+}
+
+/* Address & hours */
+.card-address,
+.card-hours {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  gap: 4px;
+  line-height: 1.4;
+}
+
+/* Action links */
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.card-link {
+  font-size: 0.72rem;
+  color: var(--accent);
+  text-decoration: none;
+  padding: 4px 10px;
+  border: 1px solid rgba(99, 179, 237, 0.3);
+  border-radius: var(--radius-sm);
+  transition: all 0.18s;
+  white-space: nowrap;
+  min-height: 28px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.card-link:hover {
+  background: rgba(99, 179, 237, 0.1);
+  border-color: var(--accent);
+}
+
+/* ─── Mobile ─────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hotspot-card { min-height: 64px; }
+
+  .card-body    { padding: 10px 12px; }
+  .card-name    { font-size: 0.88rem; }
+
+  /* Bigger touch area for links */
+  .card-link { padding: 6px 12px; min-height: 34px; }
+}
